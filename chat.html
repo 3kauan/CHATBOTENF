@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat por Voz</title>
+
+<style>
+/* ==========================================================
+   RESET E BASE
+   ========================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: "Poppins", sans-serif;
+    background: radial-gradient(circle at top, #1a1446 0%, #0a0f2d 45%, #050614 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: #fff;
+}
+
+/* ==========================================================
+   FUNDO COM PARTÍCULAS ANIMADAS
+   ========================================================== */
+.particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    overflow: hidden;
+}
+
+.particles span {
+    position: absolute;
+    display: block;
+    width: 5px;
+    height: 5px;
+    background: #7b2ff7;
+    opacity: 0.4;
+    border-radius: 50%;
+    animation: rise 8s linear infinite;
+}
+
+@keyframes rise {
+    0% { transform: translateY(100vh) scale(0.5); opacity: 0.1; }
+    100% { transform: translateY(-10vh) scale(1.2); opacity: 0.6; }
+}
+
+/* ==========================================================
+   CAIXA DO CHAT
+   ========================================================== */
+.chatbox {
+    width: 380px;
+    padding: 40px;
+    text-align: center;
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    background: rgba(20, 10, 55, 0.32);
+    border: 1px solid rgba(123, 47, 247, 0.4);
+    position: relative;
+
+    box-shadow:
+        0 0 25px rgba(123, 47, 247, 0.4),
+        inset 0 0 25px rgba(40, 20, 100, 0.3);
+
+    animation: neon 3.5s ease-in-out infinite;
+}
+
+@keyframes neon {
+    0%, 100% { box-shadow: 0 0 15px #7b2ff7; }
+    50% { box-shadow: 0 0 35px #9c5cff; }
+}
+
+/* Título */
+.chatbox h2 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    color: #d6caff;
+    text-shadow: 0 0 10px #7b2ff7;
+}
+
+/* ==========================================================
+   BOTÃO ANIMADO
+   ========================================================== */
+button {
+    background: linear-gradient(135deg, #7b2ff7, #4b1da0);
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    font-size: 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 600;
+
+    box-shadow:
+        0 0 15px rgba(123, 47, 247, 0.8),
+        inset 0 0 12px rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efeito de pulso neon */
+button::after {
+    content: "";
+    position: absolute;
+    width: 140%;
+    height: 140%;
+    top: -20%;
+    left: -20%;
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 60%);
+    transform: scale(0);
+    opacity: 0;
+    transition: 0.4s;
+}
+
+button:hover::after {
+    transform: scale(1);
+    opacity: 0.3;
+}
+
+button:hover {
+    transform: scale(1.08);
+    box-shadow:
+        0 0 25px rgba(123, 47, 247, 1),
+        0 0 40px rgba(123, 47, 247, 0.7);
+}
+
+button:active {
+    transform: scale(0.96);
+}
+
+/* Brilhos extras da caixa */
+.chatbox::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    background: rgba(123, 47, 247, 0.35);
+    filter: blur(90px);
+    top: -50px;
+    left: -40px;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.chatbox::after {
+    content: "";
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    background: rgba(10, 15, 45, 0.7);
+    filter: blur(80px);
+    bottom: -40px;
+    right: -40px;
+    border-radius: 50%;
+    z-index: -1;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PARTICULAS -->
+<div class="particles"></div>
+<script>
+for (let i = 0; i < 30; i++) {
+    const span = document.createElement("span");
+    span.style.left = Math.random() * 100 + "%";
+    span.style.animationDelay = Math.random() * 8 + "s";
+    span.style.animationDuration = 4 + Math.random() * 6 + "s";
+    document.querySelector(".particles").appendChild(span);
+}
+</script>
+
+<div class="chatbox">
+    <h2>Chatbox por Voz</h2>
+    <button onclick="ouvir()">Falar Agora</button>
+</div>
+
+<script>
+const pergunta = [
+    "qual o hormônio responsável pelo crescimento",
+    "qual o significado da sigla pa",
+    "qual o principal método de prevenção contra ists",
+    "quais os primeiros sinais da puberdade masculina",
+    "onde ocorre a fecundação do espermatozoide e do óvulo"
+];
+
+const resposta = [
+    "O principal hormônio responsável pelo crescimento do corpo humano é o, GH.",
+    "PA significa Pressão Arterial.",
+    "O principal método de prevenção contra ISTs é o uso de preservativo.",
+    "Os primeiros sinais da puberdade masculina são o aumento dos testículos, mudança da voz e surgimento de pelos.",
+    "A fecundação ocorre nas trompas de Falópio."
+];
+
+function falar(texto) {
+    const discurso = new SpeechSynthesisUtterance(texto);
+    discurso.lang = "pt-BR";
+    discurso.rate = 1;
+    window.speechSynthesis.speak(discurso);
+}
+
+function ouvir() {
+
+    const reconhecer = new webkitSpeechRecognition();
+    reconhecer.lang = "pt-BR";
+    reconhecer.start();
+
+    reconhecer.onresult = function(event) {
+
+        const textoFalado = event.results[0][0].transcript.toLowerCase();
+        console.log("Você disse:", textoFalado);
+
+        for (let i = 0; i < pergunta.length; i++) {
+            if (textoFalado.includes(pergunta[i])) {
+                falar(resposta[i]);
+                return;
+            }
+        }
+
+        falar("Desculpe, não entendi sua pergunta. Poderia repetir?");
+    };
+}
+</script>
+
+</body>
+</html>
